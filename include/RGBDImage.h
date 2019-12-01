@@ -16,6 +16,7 @@ public:
     RGBDImage(string filename);
     ~RGBDImage();
     void ShowSourceRGBImage();
+    void ShowSourceDepthImage();
 
 private:
     Mat RGBImage;

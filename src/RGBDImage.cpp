@@ -12,6 +12,7 @@ using namespace cv;
 RGBDImage::RGBDImage(string filename)
 {
     RGBImage = cv::imread(filename+"rgbimage0.png");
+    DepthImage = cv::imread(filename+"Depth_0.png");
 }
 
 RGBDImage::~RGBDImage()
@@ -23,4 +24,10 @@ void RGBDImage::ShowSourceRGBImage()
 {
     cv::imshow("SourceRGBImage",RGBImage);
     cv::waitKey();
+}
+void RGBDImage::ShowSourceDepthImage()
+{
+    cv::imshow("SourceDepthImage",DepthImage);
+    cv::waitKey();
+
 }

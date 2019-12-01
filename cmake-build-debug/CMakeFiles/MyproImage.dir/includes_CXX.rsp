@@ -1,0 +1,1 @@
+-IC:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug -IC:/Users/Jack-/CLionProjects/MyproImage -IC:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug/MyproImage_autogen/include -isystem C:/OpenCV/opencv/MinGWBuild/install/include -isystem C:/OpenCV/opencv/MinGWBuild/install/include/opencv 

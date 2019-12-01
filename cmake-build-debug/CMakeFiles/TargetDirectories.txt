@@ -1,0 +1,4 @@
+C:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug/CMakeFiles/MyproImage.dir
+C:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Jack-/CLionProjects/MyproImage/cmake-build-debug/CMakeFiles/MyproImage_autogen.dir

@@ -1322,24 +1322,6 @@ C:/OpenCV/opencv/MinGWBuild/install/include/opencv2/videostab/opencv2/videostab/
 opencv2/videostab/log.hpp
 C:/OpenCV/opencv/MinGWBuild/install/include/opencv2/videostab/opencv2/videostab/log.hpp
 
-C:/Users/Jack-/CLionProjects/MyproImage/include/RGBDImage.h
-iostream
--
-fstream
--
-opencv2/opencv.hpp
--
-
-C:/Users/Jack-/CLionProjects/MyproImage/src/RGBDImage.cpp
-iostream
--
-string.h
--
-opencv2/opencv.hpp
--
-../include/RGBDImage.h
-C:/Users/Jack-/CLionProjects/MyproImage/include/RGBDImage.h
-
 C:/Users/Jack-/CLionProjects/MyproImage/src/main.cpp
 iostream
 -

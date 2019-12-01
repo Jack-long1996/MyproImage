@@ -3,7 +3,7 @@
 
 int main() {
     RGBDImage rgbdImage("../data/");
-    rgbdImage.ShowSourceRGBImage();
+    //rgbdImage.ShowSourceRGBImage();
     rgbdImage.ShowSourceDepthImage();
     return 0;
 }

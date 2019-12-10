@@ -17,6 +17,7 @@ public:
     ~RGBDImage();
     void ShowSourceRGBImage();
     void ShowSourceDepthImage();
+    void ShowSourceHypeImage(string Wavelength);
 
 private:
     Mat RGBImage;

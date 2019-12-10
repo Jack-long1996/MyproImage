@@ -4,6 +4,7 @@
 int main() {
     RGBDImage rgbdImage("../data/");
     //rgbdImage.ShowSourceRGBImage();
-    rgbdImage.ShowSourceDepthImage();
+    //rgbdImage.ShowSourceDepthImage();
+    rgbdImage.ShowSourceHypeImage("886");
     return 0;
 }

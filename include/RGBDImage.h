@@ -18,6 +18,10 @@ public:
     void ShowSourceRGBImage();
     void ShowSourceDepthImage();
     void ShowSourceHypeImage(string Wavelength);
+    int otsu(Mat &img);
+    cv::Mat rgb_Procession(cv::Mat color_pic);
+    cv::Mat hsv_Procession(cv::Mat color_pic);
+    void Process();
 
 private:
     Mat RGBImage;

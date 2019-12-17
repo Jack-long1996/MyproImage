@@ -45,6 +45,90 @@ RGBDImage::~RGBDImage()
 
 }
 
+void RGBDImage::Process()
+{
+    cv::imshow("RGB_result",rgb_Procession(RGBImage));
+    cv::waitKey();
+    cv::imshow("HSV_result",hsv_Procession(RGBImage));
+    cv::waitKey();
+}
+
+cv::Mat RGBDImage::hsv_Procession(cv::Mat color_pic)
+{
+    //颜色的HSV范围
+    int iLowH = 40;
+    int iHighH = 80;
+
+    int iLowS = 40;
+    int iHighS = 255;
+
+    int iLowV = 40;
+    int iHighV = 255;
+
+    cv::Mat HSVimg;
+    cv::Mat mask;
+    cvtColor(color_pic, HSVimg, COLOR_BGR2HSV);//转为HSV
+    cv::Mat imgThresholded;
+    cv::inRange(HSVimg, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded);
+
+    //开操作 (去除一些噪点)  如果二值化后图片干扰部分依然很多，增大下面的size
+    cv::Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));
+    cv::morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
+    //闭操作 (连接一些连通域)
+    cv::morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
+    color_pic.copyTo(mask, imgThresholded);
+    return mask;
+}
+
+cv::Mat RGBDImage::rgb_Procession(cv::Mat color_pic)
+{
+    cv::Mat mask;
+    cv::Mat gray;
+    vector<Mat> channels;
+    // 把一个3通道图像转换成3个单通道图像
+    cv::split(color_pic, channels);//分离色彩通道
+    gray = (1.5* channels.at(1) - channels.at(2) - channels.at(0));
+    cv::GaussianBlur(gray, gray, Size(3, 3), 0, 0);
+    int thresh = otsu(gray);
+    color_pic.copyTo(mask, gray);
+    return mask;
+}
+
+int RGBDImage::otsu(Mat &img)
+{
+    float histogram[256] = { 0 };
+    for (int i = 0; i<img.rows; i++)
+    {
+        unsigned char* p = (unsigned char*)img.ptr(i);
+        for (int j = 0; j<img.cols; j++)
+        {
+            histogram[p[j]]++;
+        }
+    }
+    float avgValue = 0;
+    int numPixel = img.cols*img.rows;
+    for (int i = 0; i<256; i++)
+    {
+        histogram[i] = histogram[i] / numPixel;
+        avgValue += i*histogram[i];
+    }
+    int threshold = 0;
+    float gmax = 0;
+    float wk = 0, uk = 0;
+    for (int i = 0; i<256; i++) {
+        wk += histogram[i];
+        uk += i*histogram[i];
+        float ut = avgValue*wk - uk;
+        float g = ut*ut / (wk*(1 - wk));
+        if (g > gmax)
+        {
+            gmax = g;
+            threshold = i;
+        }
+    }
+    return threshold;
+}
+
 void RGBDImage::ShowSourceRGBImage()
 {
     cv::imshow("SourceRGBImage",RGBImage);

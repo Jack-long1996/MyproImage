@@ -47,22 +47,64 @@ RGBDImage::~RGBDImage()
 
 void RGBDImage::Process()
 {
-    cv::imshow("RGB_result",rgb_Procession(RGBImage));
+    //cv::imshow("RGB_result",rgb_Procession(RGBImage));
+    //cv::waitKey();
+    cv::Mat mask;
+    cv::Mat mask3 = hsv_Procession(RGBImage);
+    cv::cvtColor(mask3, mask, CV_BGR2GRAY);
+    cv::Mat mask2;
+    cv::threshold(mask, mask2, 0.0, 255.0, CV_THRESH_BINARY | CV_THRESH_OTSU);
+    // 查找轮廓，对应连通域
+    vector<vector<cv::Point>> contours;
+    cv::findContours(mask2,contours,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
+    // 寻找最大连通域
+    double maxArea = 0;
+    vector<cv::Point> maxContour;
+    for(size_t i = 0; i < contours.size(); i++)
+    {
+        double area = cv::contourArea(contours[i]);
+        if (area > maxArea)
+        {
+            maxArea = area;
+            maxContour = contours[i];
+        }
+    }
+
+    // 将轮廓转为矩形框
+    cv::Rect maxRect = cv::boundingRect(maxContour);
+
+    // 显示连通域
+    cv::Mat result1, result2, result3;
+
+    mask2.copyTo(result1);
+    mask2.copyTo(result2);
+
+    for (size_t i = 0; i < contours.size(); i++) {
+        cv::Rect r = cv::boundingRect(contours[i]);
+        cv::rectangle(result1, r, cv::Scalar(255));
+    }
+    cv::rectangle(result2, maxRect, cv::Scalar(255));
+
+    Mat roi1;
+    calibration_img_877(maxRect).copyTo(roi1); // copy the region rect1 from the image to roi1
+    //cv::rectangle(calibration_img_877, maxRect, cv::Scalar(255));
+
+    cv::imshow("HSV_result",roi1);
     cv::waitKey();
-    cv::imshow("HSV_result",hsv_Procession(RGBImage));
-    cv::waitKey();
+    //cv::imshow("Spectrum_result",spectrum_Process(calibration_img_877));
+    //cv::waitKey();
 }
 
 cv::Mat RGBDImage::hsv_Procession(cv::Mat color_pic)
 {
     //颜色的HSV范围
-    int iLowH = 40;
-    int iHighH = 80;
+    int iLowH = 0;
+    int iHighH = 180;
 
-    int iLowS = 40;
-    int iHighS = 255;
+    int iLowS = 0;
+    int iHighS = 30;
 
-    int iLowV = 40;
+    int iLowV = 223;
     int iHighV = 255;
 
     cv::Mat HSVimg;
@@ -72,7 +114,7 @@ cv::Mat RGBDImage::hsv_Procession(cv::Mat color_pic)
     cv::inRange(HSVimg, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded);
 
     //开操作 (去除一些噪点)  如果二值化后图片干扰部分依然很多，增大下面的size
-    cv::Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));
+    cv::Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
     cv::morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);
     //闭操作 (连接一些连通域)
     cv::morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
@@ -91,6 +133,14 @@ cv::Mat RGBDImage::rgb_Procession(cv::Mat color_pic)
     cv::GaussianBlur(gray, gray, Size(3, 3), 0, 0);
     int thresh = otsu(gray);
     color_pic.copyTo(mask, gray);
+    return mask;
+}
+
+cv::Mat RGBDImage::spectrum_Process(cv::Mat color_pic)
+{
+    cv::Mat mask;
+    int thresh = otsu(color_pic);
+    threshold(color_pic, mask, 188, 255, CV_THRESH_BINARY);
     return mask;
 }
 

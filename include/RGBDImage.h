@@ -21,6 +21,7 @@ public:
     int otsu(Mat &img);
     cv::Mat rgb_Procession(cv::Mat color_pic);
     cv::Mat hsv_Procession(cv::Mat color_pic);
+    cv::Mat spectrum_Process(cv::Mat color_pic);
     void Process();
 
 private:
